@@ -13,8 +13,8 @@ const toBoolean = (value) => (value?.toLowerCase() === "true");
 const isDefined = (value) => value !== undefined && value !== null;
 
 
-const NTFY_USERNAME = process.env.NTFY_USERNAME.replace(/^"|"$/g, '');
-const NTFY_PASSWORD = process.env.NTFY_PASSWORD.replace(/^"|"$/g, '');
+const NTFY_USERNAME = process.env.NTFY_USERNAME;
+const NTFY_PASSWORD = process.env.NTFY_PASSWORD;
 const NTFY_SERVER_DOMAIN = isDefined(process.env.NTFY_SERVER_DOMAIN) ? process.env.NTFY_SERVER_DOMAIN : "ntfy.sivothajan.me"; 
 const NTFY_CHANEL_NAME = process.env.NTFY_CHANEL_NAME ? process.env.NTFY_CHANEL_NAME : process.env.NTFY_USERNAME;
 
