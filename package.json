@@ -1,0 +1,30 @@
+{
+  "name": "notify",
+  "version": "1.0.0",
+  "main": "api/apiRouter.js",
+  "scripts": {
+    "test api": "echo \"Error: no test specified\" && exit 1",
+    "start api": "node api/apiRouter.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sivothajan/notify.git"
+  },
+  "keywords": [],
+  "author": "Sivothayan",
+  "license": "GPL-3.0",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "node-fetch": "^3.2.0",
+    "ua-parser-js": "^1.0.38"
+  },
+  "bugs": {
+    "url": "https://github.com/Sivothajan/notify/issues"
+  },
+  "homepage": "https://github.com/Sivothajan/notify#readme",
+  "devDependencies": {},
+  "description": ""
+}
