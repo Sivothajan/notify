@@ -2,6 +2,25 @@
   "name": "@sivothajan/notify",
   "version": "1.0.0",
   "description": "React analytics notify component",
+  "author": {
+    "name": "Sivothayan",
+    "email": "hi@sivothayan.com",
+    "url": "https://sivothayan.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "analytics",
+    "tracking",
+    "navigation",
+    "page-visits",
+    "notification",
+    "monitoring"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sivothajan/notify.git"
+  },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -12,7 +31,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",
@@ -50,5 +71,8 @@
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.55.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
