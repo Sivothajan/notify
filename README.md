@@ -1,2 +1,0 @@
-## Deploy using Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSivothajan%2Fnotify&env=NTFY_SERVER_DOMAIN,NTFY_CHANEL_NAME,NTFY_USERNAME,NTFY_PASSWORD,REDIRECT_URL,ERROR_404_REDIRECT,TIME_ZONE,LOCALE_IDENTIFIER,GET_IPV4_URL,GET_IPV6_URL&project-name=notify&repository-name=notify&redirect-url=https%3A%2F%2Fgithub.com%2FSivothajan%2Fnotify%23readme)

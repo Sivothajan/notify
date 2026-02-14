@@ -1,30 +1,54 @@
 {
-  "name": "notify",
+  "name": "@sivothajan/notify",
   "version": "1.0.0",
-  "main": "api/apiRouter.js",
+  "description": "React analytics notify component",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test api": "echo \"Error: no test specified\" && exit 1",
-    "start api": "node api/apiRouter.js"
+    "build": "tsup",
+    "format": "prettier --write .",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --fix"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sivothajan/notify.git"
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "auto"
   },
-  "keywords": [],
-  "author": "Sivothayan",
-  "license": "GPL-3.0",
-  "type": "module",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "node-fetch": "^3.2.0",
-    "ua-parser-js": "^1.0.38"
+    "ua-parser-js": "^2.0.9"
   },
-  "bugs": {
-    "url": "https://github.com/Sivothajan/notify/issues"
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "express": "^4 || ^5"
   },
-  "homepage": "https://github.com/Sivothajan/notify#readme",
-  "devDependencies": {},
-  "description": ""
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "5.0.6",
+    "@types/react": "^19.2.14",
+    "eslint": "^10.0.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.55.0"
+  }
 }
