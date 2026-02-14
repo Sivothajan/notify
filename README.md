@@ -257,4 +257,4 @@ Backend:
 
 ## License
 
-MIT © Sivothayan
+[MIT](LICENSE) © [Sivothayan Sivasiva](https://sivothayan.com)
