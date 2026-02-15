@@ -14,6 +14,7 @@ on:
           - major
 
 permissions:
+  id-token: write
   contents: write
 
 jobs:
@@ -70,8 +71,6 @@ jobs:
       # Publish to npm
       - name: Publish to npm
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
 
       # Create GitHub Release
       - name: Create GitHub Release
