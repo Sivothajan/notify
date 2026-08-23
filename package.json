@@ -22,7 +22,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sivothajan/notify.git"
+    "url": "git+https://github.com/Sivothajan/notify.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
