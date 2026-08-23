@@ -2,6 +2,9 @@
   "name": "@sivothajan/notify",
   "version": "1.2.0",
   "description": "React analytics notify component",
+  "type": "module",
+  "packageManager": "bun@1.4.0",
+  "sideEffects": false,
   "author": {
     "name": "Sivothayan",
     "email": "hi@sivothayan.com",
@@ -21,13 +24,13 @@
     "type": "git",
     "url": "git+https://github.com/sivothajan/notify.git"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "import": "./dist/index.mjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "files": [
@@ -37,9 +40,14 @@
   ],
   "scripts": {
     "build": "tsup",
+    "check": "bun run typecheck && bun run lint && bun run build",
     "format": "prettier --write .",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --fix"
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
+    "lint-staged": "lint-staged",
+    "prepack": "bun run check",
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit --pretty false"
   },
   "prettier": {
     "printWidth": 80,
@@ -52,28 +60,39 @@
     "arrowParens": "always",
     "endOfLine": "auto"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{json,md,ts,tsx,yml,yaml}": "prettier --write"
+  },
   "dependencies": {
-    "ua-parser-js": "^2.0.9"
+    "ua-parser-js": "^2.0.10"
   },
   "peerDependencies": {
     "react": "^18 || ^19",
     "express": "^4 || ^5"
   },
+  "peerDependenciesMeta": {
+    "express": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^9.39.5",
     "@types/express": "5.0.6",
-    "@types/react": "^19.2.14",
-    "eslint": "^9.39.2",
+    "@types/react": "^19.2.18",
+    "eslint": "^9.39.5",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "jiti": "^2.6.1",
-    "prettier": "^3.8.1",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.55.0"
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "jiti": "^2.7.0",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"

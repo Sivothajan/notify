@@ -9,13 +9,13 @@ Designed for analytics, logging, monitoring, and security use cases. Works with 
 ## Installation
 
 ```bash
-npm install @sivothajan/notify
+bun add @sivothajan/notify
 ```
 
-or
+npm is also supported:
 
 ```bash
-bun add @sivothajan/notify
+npm install @sivothajan/notify
 ```
 
 ---
@@ -47,6 +47,10 @@ export default function App() {
   );
 }
 ```
+
+For Next.js App Router projects, render `Notify` from a client layout or client
+component. The package ships the component with a client directive for modern
+Next.js compatibility.
 
 ---
 
@@ -111,6 +115,8 @@ interface DeviceInfo {
 ## Backend Utilities
 
 This package includes backend helpers for Express and other Node.js servers.
+Express is an optional peer dependency; install it only when you use the backend
+helpers in an Express application.
 
 ---
 
@@ -239,8 +245,15 @@ Frontend:
 
 Backend:
 
-- Node.js 18 or newer
-- Express recommended
+- Bun 1.4 or Node.js 22 or newer
+- Express recommended for request helpers
+
+Development:
+
+```bash
+bun install
+bun run check
+```
 
 ---
 

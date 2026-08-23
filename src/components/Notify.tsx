@@ -1,4 +1,54 @@
-import { useEffect, useCallback, useRef } from 'react';
+'use client';
+
+import { useCallback, useEffect, useRef } from 'react';
+
+const NOTIFY_NAVIGATION_EVENT = 'notify:navigation';
+
+let historyPatchSubscribers = 0;
+let restoreHistoryPatch: (() => void) | null = null;
+
+function createSessionId(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `notify_${Date.now().toString(36)}_${Math.random()
+    .toString(36)
+    .slice(2)}`;
+}
+
+function installHistoryNavigationDispatch(): () => void {
+  historyPatchSubscribers += 1;
+
+  if (!restoreHistoryPatch) {
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function pushState(...args): void {
+      originalPushState.apply(this, args);
+      window.dispatchEvent(new Event(NOTIFY_NAVIGATION_EVENT));
+    };
+
+    window.history.replaceState = function replaceState(...args): void {
+      originalReplaceState.apply(this, args);
+      window.dispatchEvent(new Event(NOTIFY_NAVIGATION_EVENT));
+    };
+
+    restoreHistoryPatch = (): void => {
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }
+
+  return (): void => {
+    historyPatchSubscribers -= 1;
+
+    if (historyPatchSubscribers === 0) {
+      restoreHistoryPatch?.();
+      restoreHistoryPatch = null;
+    }
+  };
+}
 
 /**
  * Represents device and environment information collected from the client.
@@ -120,10 +170,14 @@ export default function Notify({
    */
   const isMountedRef = useRef<boolean>(true);
 
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   /**
    * Generates a session ID that persists during component lifecycle.
    */
-  const sessionIdRef = useRef<string>(crypto.randomUUID());
+  const sessionIdRef = useRef<string>(createSessionId());
 
   /**
    * Collects device and environment information.
@@ -181,6 +235,7 @@ export default function Notify({
       if (!apiEndPoint || !isMountedRef.current) return;
 
       const controller = new AbortController();
+      abortControllerRef.current = controller;
 
       try {
         const response = await fetch(apiEndPoint, {
@@ -215,6 +270,10 @@ export default function Notify({
       } catch (error) {
         if (!isMountedRef.current) return;
 
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
         if (retryCount >= maxRetries) {
           if (consoleLog) {
             // eslint-disable-next-line no-console
@@ -230,7 +289,7 @@ export default function Notify({
           console.warn(`[Notify] Retry ${retryCount + 1} in ${delay}ms`);
         }
 
-        setTimeout(() => {
+        retryTimeoutRef.current = setTimeout(() => {
           notifyServer(retryCount + 1);
         }, delay);
       }
@@ -257,13 +316,27 @@ export default function Notify({
     // Listen for navigation events
     window.addEventListener('popstate', handleNavigation);
     window.addEventListener('hashchange', handleNavigation);
+    window.addEventListener(NOTIFY_NAVIGATION_EVENT, handleNavigation);
+
+    const uninstallHistoryNavigationDispatch =
+      installHistoryNavigationDispatch();
 
     return (): void => {
       isMountedRef.current = false;
 
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
+
+      abortControllerRef.current?.abort();
+
       window.removeEventListener('popstate', handleNavigation);
 
       window.removeEventListener('hashchange', handleNavigation);
+
+      window.removeEventListener(NOTIFY_NAVIGATION_EVENT, handleNavigation);
+
+      uninstallHistoryNavigationDispatch();
     };
   }, [notifyServer]);
 

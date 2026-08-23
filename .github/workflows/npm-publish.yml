@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: "Version bump type"
+        description: 'Version bump type'
         required: true
         default: patch
         type: choice
@@ -24,38 +24,44 @@ jobs:
     steps:
       # Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
-      # Install dependencies (works without package-lock.json)
+      # Setup Bun
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+
+      # Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: bun install --frozen-lockfile
 
       # Bump version in package.json
       - name: Bump version
         id: version
         run: |
-          NEW_VERSION=$(npm version ${{ github.event.inputs.bump }} --no-git-tag-version)
+          NEW_VERSION=$(bun pm version ${{ github.event.inputs.bump }} --no-git-tag-version)
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
 
-      # Build project (skips if no build script)
-      - name: Build project
-        run: npm run build --if-present
+      # Validate and build project
+      - name: Check package
+        run: bun run check
 
       # Commit version change
       - name: Commit version change
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add package.json package-lock.json || true
+          git add package.json bun.lock
           git commit -m "release: ${{ steps.version.outputs.version }}" || echo "No changes to commit"
 
       # Create git tag
@@ -69,12 +75,15 @@ jobs:
           git push origin ${{ steps.version.outputs.version }}
 
       # Publish to npm
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --provenance
 
       # Create GitHub Release
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.version }}
           name: Release ${{ steps.version.outputs.version }}
